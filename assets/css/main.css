@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body{
+    font-family: 'inter', sans-serif;
+}
+
+.x-pad{
+    padding-left: 8em;
+    padding-right: 8em;
+}
