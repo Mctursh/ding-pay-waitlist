@@ -11,3 +11,40 @@ body{
     padding-left: 8em;
     padding-right: 8em;
 }
+
+
+/****************************************MEDIA QUERY**********************************************/
+
+@media screen and (max-width: 1280px) {
+    .x-pad{
+      padding-left: 6em;
+      padding-right: 6em;
+    }
+  }
+
+@media screen and (max-width: 1190px) {
+    .x-pad{
+      padding-left: 4em;
+      padding-right: 4em;
+    }
+  }
+
+@media screen and (max-width: 964px) {
+    .x-pad{
+      padding-left: 3em;
+      padding-right: 3em;
+    }
+  }
+
+@media screen and (max-width: 768px) {
+    .x-pad{
+      padding-left: 2em;
+      padding-right: 2em;
+    }
+  }
+@media screen and (max-width: 460px) {
+    .x-pad{
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+  }
