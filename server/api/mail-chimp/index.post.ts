@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
       body: JSON.stringify({
         email_address: body.emailAddress,
         status: 'subscribed',
+        tags: [body.tags]
       })
     })
   
