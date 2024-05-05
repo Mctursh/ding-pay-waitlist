@@ -1,5 +1,5 @@
 <template>
-    <div class="desktop:max-w-full desktop-above:max-w-[1440px] desktop-above:my-0 desktop-above:mx-auto h-[92vh] overflow-hidden">
+    <div class="desktop:max-w-full desktop-above:max-w-[1440px] desktop-above:my-0 desktop-above:mx-auto h-[92vh] overflow-hidde">
         <header class="x-pad py-12 h-[17%]">
             <nav class="flex justify-between items-center">
                 <div class="flex items-center gap-x-12 phablet:flex-col phablet: gap-y-6 phablet:items-start">
@@ -39,23 +39,27 @@
                         your cards securely in one place. Our state of the art technology allows you make instant and
                         secure payments with a simple sound.</h4>
                     <h4 v-show="!isTabPersonal" class="text-black font-normal text-xl laptop:text-lg phone:text-center phone:text-2xl android:text-xl mini:text-lg iphone:text-start">Accept payments effortlessly, enjoy instant withdrawals to your local bank, and manage your team with ease. You literally listen to the sound in inflow.</h4>
-                    <form class="flex items-center gap-x-3 w-3/4 phablet:flex-col phablet:gap-y-4 phablet:items-stretch iphone:w-full">
-                        <input class="rounded-[100px] py-4 px-6 grow laptop:py-2 laptop:text-sm phone:text-lg android:text-base" type="email"
+                    <form @submit.prevent="subscribe" class="flex items-center gap-x-3 w-3/4 phablet:flex-col phablet:gap-y-4 phablet:items-stretch iphone:w-full">
+                        <input v-model="email" class="rounded-[100px] py-4 px-6 grow laptop:py-2 laptop:text-sm phone:text-lg android:text-base" type="email"
                             placeholder="Email Address"
                             :class="{
                                 'bg-[#F9FAFB]': !isTabPersonal,
                                 'bg-light-grey': isTabPersonal
                             }"
                             >
-                        <button class="text-white text-base font-medium px-6 py-4 rounded-[100px] bg-primary laptop:py-2 laptop:text-sm laptop:px-3 phone:text-lg android:text-base"
-                            type="button">
-                            Join Waitlist
+                        <button class="text-white text-base font-medium px-6 py-4 rounded-[100px] laptop:py-2 laptop:text-sm laptop:px-3 phone:text-lg android:text-base"
+                            type="submit"
+                            :class="{
+                                'bg-[#249333]': successful,
+                                'bg-primary': !successful
+                            }">
+                            {{`${successful ? 'Joined!' : 'Join Waitlist'}`}}
                         </button>
                     </form>
                 </div>
-                <div class="absolute top-[-10%] right-[-25%] desktop:top-[-5%] desktop:right-[-20%] desktop-above:right-[-20%] desktop-range:right-[-15%] laptop:right-[-23%] ipad:right-[-30%] ipad:top-[2.5%] tablet:right-[-38%] tablet:top-[7.5%] phone:hidden">
-                    <img v-show="isTabPersonal" class="w-[80%] desktop-above:w-[94.5%] desktop-range:w-[94.5%] desktop:w-[90%] laptop:w-[85%] ipad:w-[77%] tablet:w-[73%]" src="/phone.png" alt="app demo">
-                    <img v-show="!isTabPersonal" class="w-[80%] desktop-above:w-[94.5%] desktop-range:w-[94.5%] desktop:w-[90%] laptop:w-[85%] ipad:w-[77%] tablet:w-[73%]" src="/phone-2.png" alt="app demo">
+                <div class="flex justify-center items-center h-full">
+                    <img v-show="isTabPersonal" class="h-full translate-x-[40%] laptop:translate-x-[30%] ipad:translate-x-[20%] tablet:translate-x-[10%] phone:hidden" src="/phone-light.png" alt="app demo light mode">
+                    <img v-show="!isTabPersonal" class="h-full translate-x-[40%] laptop:translate-x-[30%] ipad:translate-x-[20%] tablet:translate-x-[10%] phone:hidden" src="/phone-dark.png" alt="app demo dark mode">
                 </div>
             </section>
         </main>
@@ -77,6 +81,30 @@
 import { store } from '~/stores/index';
 
 const isTabPersonal = ref<boolean>(store.isTabPersonal)
+const email = ref<string>('')
+const successful = ref<boolean>(false)
+
+
+const subscribe = async() => {
+    if (successful.value) return
+    try {
+        const { error } = await useFetch('/api/mail-chimp', {
+            method: 'POST',
+            body: {
+                emailAddress: email.value
+            }
+        })
+        
+        if (!error.value) {
+            successful.value = true
+        } else {
+            createError('Failed to subscribed user')
+            successful.value = false
+        }
+    } catch (error) {
+        throw error
+    }
+}
 
 watch(
     isTabPersonal,
